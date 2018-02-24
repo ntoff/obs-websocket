@@ -11,6 +11,7 @@
  * 
  * @return {boolean} `streaming` Current streaming status.
  * @return {boolean} `recording` Current recording status.
+ * @return {boolean} `replaybuffer` Current replay buffer status.
  * @return {String (optional)} `stream-timecode` Time elapsed since streaming started (only present if currently streaming).
  * @return {String (optional)} `rec-timecode` Time elapsed since recording started (only present if currently recording).
  * @return {boolean} `preview-only` Always false. Retrocompatibility with OBSRemote.
@@ -24,6 +25,7 @@
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", obs_frontend_streaming_active());
     obs_data_set_bool(data, "recording", obs_frontend_recording_active());
+    obs_data_set_bool(data, "replaybuffer", obs_frontend_replay_buffer_active());
     obs_data_set_bool(data, "preview-only", false);
 
     const char* tc = nullptr;

@@ -60,6 +60,7 @@ class WSEvents : public QObject {
 
     bool _streamingActive;
     bool _recordingActive;
+    bool _replayActive;
 
     uint64_t _streamStarttime;
     uint64_t _recStarttime;
