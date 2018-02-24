@@ -93,6 +93,7 @@ WSEvents::WSEvents(WSServer* srv) {
 
     _streamingActive = false;
     _recordingActive = false;
+    _replayActive = false;
 
     _streamStarttime = 0;
     _recStarttime = 0;
@@ -172,12 +173,14 @@ void WSEvents::FrontendEventHandler(enum obs_frontend_event event, void* private
         owner->OnReplayStarting();
     }
     else if (event == OBS_FRONTEND_EVENT_REPLAY_BUFFER_STARTED) {
+        owner->_replayActive = true;
         owner->OnReplayStarted();
     }
     else if (event == OBS_FRONTEND_EVENT_REPLAY_BUFFER_STOPPING) {
         owner->OnReplayStopping();
     }
     else if (event == OBS_FRONTEND_EVENT_REPLAY_BUFFER_STOPPED) {
+        owner->_replayActive = false;
         owner->OnReplayStopped();
     }
     else if (event == OBS_FRONTEND_EVENT_STUDIO_MODE_ENABLED) {
@@ -628,6 +631,7 @@ void WSEvents::OnExit() {
 void WSEvents::StreamStatus() {
     bool streamingActive = obs_frontend_streaming_active();
     bool recordingActive = obs_frontend_recording_active();
+    bool replayActive = obs_frontend_replay_buffer_active();
 
     OBSOutputAutoRelease streamOutput = obs_frontend_get_streaming_output();
 
@@ -664,6 +668,7 @@ void WSEvents::StreamStatus() {
     OBSDataAutoRelease data = obs_data_create();
     obs_data_set_bool(data, "streaming", streamingActive);
     obs_data_set_bool(data, "recording", recordingActive);
+    obs_data_set_bool(data, "replaybuffer", replayActive);
     obs_data_set_int(data, "bytes-per-sec", bytesPerSec);
     obs_data_set_int(data, "kbits-per-sec", (bytesPerSec * 8) / 1024);
     obs_data_set_int(data, "total-stream-time", totalStreamTime);
@@ -690,6 +695,7 @@ void WSEvents::StreamStatus() {
  * @return {int (optional)} `total-record-time` Total time (in seconds) since recording started.
  * @return {int (optional)} `total-record-bytes` Total bytes recorded since the recording started.
  * @return {int (optional)} `total-record-frames` Total frames recorded since the recording started.
+ * @return {boolean (optional)} `replaybuffer` Current replay buffer state.
  * 
  * @api events
  * @name Heartbeat
@@ -701,6 +707,7 @@ void WSEvents::Heartbeat() {
 
     bool streamingActive = obs_frontend_streaming_active();
     bool recordingActive = obs_frontend_recording_active();
+    bool replayActive = obs_frontend_replay_buffer_active();
 
     OBSDataAutoRelease data = obs_data_create();
     OBSOutputAutoRelease recordOutput = obs_frontend_get_recording_output();
@@ -729,6 +736,8 @@ void WSEvents::Heartbeat() {
         obs_data_set_int(data, "total-record-bytes", (uint64_t)obs_output_get_total_bytes(recordOutput));
         obs_data_set_int(data, "total-record-frames", obs_output_get_total_frames(recordOutput));
     }
+
+    obs_data_set_bool(data, "replaybuffer", replayActive);
 
     broadcastUpdate("Heartbeat", data);
 }
