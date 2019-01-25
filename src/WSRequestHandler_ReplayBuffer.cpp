@@ -87,3 +87,21 @@ HandlerResponse WSRequestHandler::HandleSaveReplayBuffer(WSRequestHandler* req) 
 
 	return req->SendOKResponse();
 }
+
+/**
+ * Returns the replay buffer active / inactive state
+ * 
+ * @api requests
+ * @name GetReplayBufferStatus
+ * @category replay buffer
+ * 
+ * custom build only
+ */
+HandlerResponse WSRequestHandler::HandleReplayBufferActive(WSRequestHandler* req) {
+	bool replayActive = obs_frontend_replay_buffer_active();
+
+	OBSDataAutoRelease response = obs_data_create();
+	obs_data_set_bool(response, "replay-active", replayActive);
+
+	return req->SendOKResponse(response);
+}

@@ -89,6 +89,7 @@ class WSRequestHandler : public QObject {
 		static HandlerResponse HandleStartReplayBuffer(WSRequestHandler* req);
 		static HandlerResponse HandleStopReplayBuffer(WSRequestHandler* req);
 		static HandlerResponse HandleSaveReplayBuffer(WSRequestHandler* req);
+		static HandlerResponse HandleReplayBufferActive(WSRequestHandler* req);
 
 		static HandlerResponse HandleSetRecordingFolder(WSRequestHandler* req);
 		static HandlerResponse HandleGetRecordingFolder(WSRequestHandler* req);

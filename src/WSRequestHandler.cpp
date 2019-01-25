@@ -62,6 +62,7 @@ QHash<QString, HandlerResponse(*)(WSRequestHandler*)> WSRequestHandler::messageM
 	{ "StartReplayBuffer", WSRequestHandler::HandleStartReplayBuffer },
 	{ "StopReplayBuffer", WSRequestHandler::HandleStopReplayBuffer },
 	{ "SaveReplayBuffer", WSRequestHandler::HandleSaveReplayBuffer },
+	{ "GetReplayBufferStatus", WSRequestHandler::HandleReplayBufferActive },
 
 	{ "SetRecordingFolder", WSRequestHandler::HandleSetRecordingFolder },
 	{ "GetRecordingFolder", WSRequestHandler::HandleGetRecordingFolder },
